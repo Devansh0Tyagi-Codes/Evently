@@ -29,7 +29,7 @@ export default function EventCard({ event = {} }) {
     Workshops:  'bg-stone-100',
     Music:      'bg-amber-50',
     Sports:     'bg-emerald-50',
-    Business:   'bg-blue-50',
+    Business:   'bg-stone-50',
     Art:        'bg-orange-50',
     Community:  'bg-teal-50',
   }[category] ?? 'bg-surface-muted'

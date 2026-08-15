@@ -11,6 +11,8 @@ export interface Event {
   rating: number
   reviewCount: number
   organizer: string
+  organizerCategory?: string
+  duration?: string
   verified: boolean
   description: string
   highlights: string[]

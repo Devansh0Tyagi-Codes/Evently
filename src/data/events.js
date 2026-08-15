@@ -19,6 +19,8 @@ export const EVENTS = [
     rating: 4.8,
     reviewCount: 214,
     organizer: 'Google Developer Groups India',
+    organizerCategory: 'Technology Community',
+    duration: '2 days',
     verified: true,
     description:
       "India's biggest Google Cloud conference returns — two days of keynotes, hands-on labs, and deep-dives into AI, serverless, and data infrastructure.",
@@ -44,6 +46,8 @@ export const EVENTS = [
     rating: 4.7,
     reviewCount: 89,
     organizer: 'JSConf India',
+    organizerCategory: 'Developer Community',
+    duration: '1 day',
     verified: true,
     description:
       'A full-day hands-on workshop covering React 19 features, the App Router, server components, and real-world performance optimisation techniques.',
@@ -69,6 +73,8 @@ export const EVENTS = [
     rating: 4.9,
     reviewCount: 176,
     organizer: 'StartupIndia Tech',
+    organizerCategory: 'Startup Community',
+    duration: '1 day',
     verified: true,
     description:
       'The premier AI startup conference in North India — featuring funded founders, investor panels, and live product demos from 40+ AI companies.',
@@ -96,6 +102,8 @@ export const EVENTS = [
     rating: 4.6,
     reviewCount: 67,
     organizer: 'Design Garage India',
+    organizerCategory: 'Design Education',
+    duration: '2 days',
     verified: true,
     description:
       'Two days of pure design craft — from wireframing principles to polished Figma prototypes. Ideal for designers moving from junior to mid-level.',
@@ -121,6 +129,8 @@ export const EVENTS = [
     rating: 4.5,
     reviewCount: 43,
     organizer: 'Mitti Collective',
+    organizerCategory: 'Arts & Crafts',
+    duration: '3 hours',
     verified: false,
     description:
       'Learn hand-building and wheel-throwing techniques rooted in traditional North Indian pottery from master craftsmen. All materials included.',
@@ -146,6 +156,8 @@ export const EVENTS = [
     rating: 4.4,
     reviewCount: 51,
     organizer: 'Delhi Shutterbug Society',
+    organizerCategory: 'Photography Club',
+    duration: '5 hours',
     verified: true,
     description:
       'Street photography walk + studio session with a professional photographer. Covers composition, lighting, and post-processing in Lightroom.',
@@ -173,6 +185,8 @@ export const EVENTS = [
     rating: 4.9,
     reviewCount: 512,
     organizer: 'BookMyShow Live',
+    organizerCategory: 'Live Entertainment',
+    duration: '3 hours',
     verified: true,
     description:
       "India's most iconic electronic music producer Nucleya returns for a 3-hour live set featuring tracks from Bass Yatra and his upcoming 2026 album.",
@@ -198,6 +212,8 @@ export const EVENTS = [
     rating: 4.3,
     reviewCount: 38,
     organizer: 'Piano Man Events',
+    organizerCategory: 'Music Venue',
+    duration: '3 hours',
     verified: true,
     description:
       'An intimate Friday evening of acoustic performances by indie artists. Open registration for performers — 5-minute slots available.',
@@ -225,6 +241,8 @@ export const EVENTS = [
     rating: 4.7,
     reviewCount: 290,
     organizer: 'Noida Athletics Club',
+    organizerCategory: 'Sports Organisation',
+    duration: '4 hours',
     verified: true,
     description:
       'The annual Noida Half Marathon is back — 21 km, 10 km, and 5 km routes along the iconic Noida Expressway and Botanical Garden belt.',
@@ -250,6 +268,8 @@ export const EVENTS = [
     rating: 4.2,
     reviewCount: 64,
     organizer: 'GZB Sports Club',
+    organizerCategory: 'Sports Club',
+    duration: '1 day',
     verified: false,
     description:
       'Register your team of 11 for the 8-team weekend cricket league. T20 format, professional umpires, and live scoring on the Evently app.',
@@ -277,6 +297,8 @@ export const EVENTS = [
     rating: 4.6,
     reviewCount: 102,
     organizer: "Founder's Network India",
+    organizerCategory: 'Startup Community',
+    duration: '3 hours',
     verified: true,
     description:
       'Watch 10 early-stage startups pitch to a panel of seasoned investors, followed by structured networking and an open bar.',
@@ -302,6 +324,8 @@ export const EVENTS = [
     rating: 4.5,
     reviewCount: 78,
     organizer: 'Growth School India',
+    organizerCategory: 'EdTech',
+    duration: '1 day',
     verified: true,
     description:
       'A full-day deep dive into performance marketing, SEO, content strategy, and analytics — taught by practitioners managing ₹10 Cr+ ad budgets.',
@@ -329,6 +353,8 @@ export const EVENTS = [
     rating: 4.4,
     reviewCount: 59,
     organizer: 'Lalit Kala Akademi',
+    organizerCategory: 'Arts Institution',
+    duration: '10 days',
     verified: true,
     description:
       'A 10-day group exhibition featuring 28 emerging Indian artists exploring urban identity, migration, and belonging through painting, sculpture and mixed media.',
@@ -354,6 +380,8 @@ export const EVENTS = [
     rating: 4.3,
     reviewCount: 33,
     organizer: 'Street Art Collective GZB',
+    organizerCategory: 'Street Art',
+    duration: '1 day',
     verified: false,
     description:
       'Watch 20 street artists transform 1,000 sq ft of walls over a single day. Live music, food trucks, and a mini-market run alongside.',
@@ -381,6 +409,8 @@ export const EVENTS = [
     rating: 4.6,
     reviewCount: 47,
     organizer: 'Noida Greenwatch',
+    organizerCategory: 'Environmental NGO',
+    duration: '4 hours',
     verified: true,
     description:
       'Join 500+ volunteers for a community clean-up of Sector 50 and the adjoining Okhla Bird Sanctuary buffer zone. Gloves, bags, and breakfast provided.',
@@ -406,6 +436,8 @@ export const EVENTS = [
     rating: 4.7,
     reviewCount: 213,
     organizer: 'Delhi Tourism',
+    organizerCategory: 'Government Tourism',
+    duration: '1 day',
     verified: true,
     description:
       'The beloved Dilli Haat Artisan Fair returns for its autumn edition — 200 artisans from across India, live folk performances, and street food from every state.',
