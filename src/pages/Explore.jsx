@@ -8,9 +8,9 @@ import EventCard from '../components/ui/EventCard'
 import EmptyState from '../components/ui/EmptyState'
 import { EVENTS } from '../data/events'
 
-/* ── Filter option definitions ─────────────────────────────────────────────── */
-const CATEGORIES = ['All', 'Technology', 'Workshops', 'Music', 'Sports', 'Business', 'Art', 'Community']
-const CITIES     = ['All', 'Noida', 'Delhi', 'Ghaziabad', 'Gurgaon']
+/* ── Filter options ─────────────────────────────────────────────────────────── */
+const CATEGORIES  = ['All', 'Technology', 'Workshops', 'Music', 'Sports', 'Business', 'Art', 'Community']
+const CITIES      = ['All', 'Noida', 'Delhi', 'Ghaziabad', 'Gurgaon']
 const PRICE_OPTIONS = [
   { value: 'all',        label: 'All Prices' },
   { value: 'under500',   label: 'Under ₹500' },
@@ -24,29 +24,59 @@ const SORT_OPTIONS = [
   { value: 'rating',      label: 'Top Rated' },
 ]
 
-/* ── Price predicate ────────────────────────────────────────────────────────── */
 function matchesPrice(price, filter) {
-  if (filter === 'all')       return true
-  if (filter === 'under500')  return price < 500
-  if (filter === '500to1000') return price >= 500 && price <= 1000
-  if (filter === 'above1000') return price > 1000
+  if (filter === 'all')        return true
+  if (filter === 'under500')   return price < 500
+  if (filter === '500to1000')  return price >= 500 && price <= 1000
+  if (filter === 'above1000')  return price > 1000
   return true
 }
 
-/* ── Sort comparator ────────────────────────────────────────────────────────── */
 function applySorting(events, sort) {
   const arr = [...events]
   if (sort === 'price_asc')  return arr.sort((a, b) => a.price - b.price)
   if (sort === 'price_desc') return arr.sort((a, b) => b.price - a.price)
   if (sort === 'rating')     return arr.sort((a, b) => b.rating - a.rating)
-  return arr // 'recommended' — keep original order
+  return arr
+}
+
+/* ── Chip button ────────────────────────────────────────────────────────────── */
+function FilterChip({ label, active, onClick, activeClass }) {
+  return (
+    <button
+      onClick={onClick}
+      className={[
+        'px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-150',
+        active
+          ? activeClass ?? 'bg-ink text-white border-ink'
+          : 'bg-white text-ink-secondary border-border hover:text-ink hover:border-border-strong',
+      ].join(' ')}
+    >
+      {label}
+    </button>
+  )
+}
+
+/* ── Removable active filter pill ──────────────────────────────────────────── */
+function FilterPill({ label, onRemove }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 bg-surface-muted border border-border text-ink-secondary text-xs font-medium px-2.5 py-1 rounded-full">
+      {label}
+      <button
+        onClick={onRemove}
+        className="text-ink-muted hover:text-ink transition-colors"
+        aria-label={`Remove ${label} filter`}
+      >
+        <X size={10} />
+      </button>
+    </span>
+  )
 }
 
 export default function Explore() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const navigate = useNavigate()
+  const navigate = useNavigate() // eslint-disable-line no-unused-vars
 
-  /* ── Initialise filter state from URL params ──────────────────────────── */
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') ?? '')
   const [category,    setCategory]    = useState(searchParams.get('category') ?? 'All')
   const [city,        setCity]        = useState('All')
@@ -55,7 +85,6 @@ export default function Explore() {
   const [sortOpen,    setSortOpen]    = useState(false)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
-  /* Sync URL → state when the user navigates back from Home */
   useEffect(() => {
     const s = searchParams.get('search')
     const c = searchParams.get('category')
@@ -63,12 +92,9 @@ export default function Explore() {
     if (c) setCategory(c)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* ── Derived filtered + sorted list ──────────────────────────────────── */
   const results = useMemo(() => {
     const q = searchQuery.trim().toLowerCase()
-
     const filtered = EVENTS.filter((e) => {
-      // Search: title, category, city, location, organizer
       const matchSearch =
         !q ||
         e.title.toLowerCase().includes(q) ||
@@ -76,37 +102,27 @@ export default function Explore() {
         e.city.toLowerCase().includes(q) ||
         e.location.toLowerCase().includes(q) ||
         e.organizer.toLowerCase().includes(q)
-
-      const matchCategory = category === 'All' || e.category === category
-      const matchCity     = city === 'All' || e.city === city
-      const matchPrice    = matchesPrice(e.price, priceFilter)
-
-      return matchSearch && matchCategory && matchCity && matchPrice
+      return (
+        matchSearch &&
+        (category === 'All' || e.category === category) &&
+        (city === 'All' || e.city === city) &&
+        matchesPrice(e.price, priceFilter)
+      )
     })
-
     return applySorting(filtered, sortBy)
   }, [searchQuery, category, city, priceFilter, sortBy])
 
-  /* ── Helpers ──────────────────────────────────────────────────────────── */
   const hasActiveFilters =
-    searchQuery !== '' ||
-    category !== 'All' ||
-    city !== 'All' ||
-    priceFilter !== 'all' ||
-    sortBy !== 'recommended'
+    searchQuery !== '' || category !== 'All' || city !== 'All' ||
+    priceFilter !== 'all' || sortBy !== 'recommended'
 
   const clearFilters = () => {
-    setSearchQuery('')
-    setCategory('All')
-    setCity('All')
-    setPriceFilter('all')
-    setSortBy('recommended')
-    setSearchParams({})
+    setSearchQuery(''); setCategory('All'); setCity('All')
+    setPriceFilter('all'); setSortBy('recommended'); setSearchParams({})
   }
 
   const handleSearch = (val) => {
     setSearchQuery(val)
-    // Update URL so sharing works
     const params = {}
     if (val.trim()) params.search = val.trim()
     if (category !== 'All') params.category = category
@@ -115,80 +131,58 @@ export default function Explore() {
 
   const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sortBy)?.label ?? 'Recommended'
 
-  /* ── Filter sidebar / chips section ──────────────────────────────────── */
+  /* ── Filter panel (shared by desktop + mobile) ───────────────────────── */
   const FilterPanel = () => (
     <div className="flex flex-col gap-6">
-
-      {/* Category */}
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">Category</p>
+        <p className="text-[11px] font-semibold text-ink-muted uppercase tracking-widest mb-3">Category</p>
         <div className="flex flex-wrap gap-2">
           {CATEGORIES.map((cat) => (
-            <button
+            <FilterChip
               key={cat}
+              label={cat}
+              active={category === cat}
               onClick={() => setCategory(cat)}
-              className={[
-                'px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-150',
-                category === cat
-                  ? 'bg-brand-blue/20 text-blue-300 border-brand-blue/40'
-                  : 'bg-transparent text-gray-500 border-white/10 hover:text-white hover:border-white/20',
-              ].join(' ')}
-            >
-              {cat}
-            </button>
+            />
           ))}
         </div>
       </div>
 
-      {/* Location */}
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">Location</p>
+        <p className="text-[11px] font-semibold text-ink-muted uppercase tracking-widest mb-3">Location</p>
         <div className="flex flex-wrap gap-2">
           {CITIES.map((c) => (
-            <button
+            <FilterChip
               key={c}
+              label={c}
+              active={city === c}
               onClick={() => setCity(c)}
-              className={[
-                'px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-150',
-                city === c
-                  ? 'bg-brand-purple/20 text-purple-300 border-brand-purple/40'
-                  : 'bg-transparent text-gray-500 border-white/10 hover:text-white hover:border-white/20',
-              ].join(' ')}
-            >
-              {c}
-            </button>
+            />
           ))}
         </div>
       </div>
 
-      {/* Price */}
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3">Price</p>
+        <p className="text-[11px] font-semibold text-ink-muted uppercase tracking-widest mb-3">Price</p>
         <div className="flex flex-wrap gap-2">
           {PRICE_OPTIONS.map(({ value, label }) => (
-            <button
+            <FilterChip
               key={value}
+              label={label}
+              active={priceFilter === value}
               onClick={() => setPriceFilter(value)}
-              className={[
-                'px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-150',
-                priceFilter === value
-                  ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                  : 'bg-transparent text-gray-500 border-white/10 hover:text-white hover:border-white/20',
-              ].join(' ')}
-            >
-              {label}
-            </button>
+              activeClass="bg-emerald-700 text-white border-emerald-700"
+            />
           ))}
         </div>
       </div>
 
-      {/* Clear filters */}
       {hasActiveFilters && (
         <button
           onClick={clearFilters}
-          className="flex items-center gap-1.5 text-xs text-red-400 hover:text-red-300 transition-colors mt-1"
+          className="flex items-center gap-1.5 text-xs text-red-500 hover:text-red-600 transition-colors"
         >
-          <X size={12} />
+          <X size={11} />
           Clear all filters
         </button>
       )}
@@ -196,18 +190,18 @@ export default function Explore() {
   )
 
   return (
-    <div className="min-h-screen py-10 sm:py-14">
-      <PageContainer>
+    <div className="min-h-screen bg-surface-subtle">
+      <PageContainer className="py-10 sm:py-14">
 
-        {/* ── Page header ─────────────────────────────────────────────── */}
+        {/* ── Header ──────────────────────────────────────────────────── */}
         <div className="mb-8">
           <SectionHeading
             title="Explore Events"
             subtitle="Find something happening near you."
-            className="mb-6"
+            className="mb-7"
           />
 
-          {/* Search + controls row */}
+          {/* Search row */}
           <div className="flex flex-col sm:flex-row gap-3">
             <SearchInput
               value={searchQuery}
@@ -221,13 +215,16 @@ export default function Explore() {
             <div className="relative">
               <button
                 onClick={() => setSortOpen((v) => !v)}
-                className="flex items-center gap-2 glass border border-white/10 hover:border-white/20 px-4 py-3 rounded-2xl text-sm text-gray-300 hover:text-white transition-all duration-200 whitespace-nowrap w-full sm:w-auto justify-between sm:justify-start"
+                className="flex items-center gap-2 bg-white border border-border hover:border-border-strong px-4 py-3 rounded-xl text-sm text-ink-secondary hover:text-ink transition-all duration-150 whitespace-nowrap w-full sm:w-auto justify-between sm:justify-start shadow-card"
               >
                 <span>{currentSortLabel}</span>
-                <ChevronDown size={14} className={`transition-transform duration-200 ${sortOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown
+                  size={14}
+                  className={`transition-transform duration-200 ${sortOpen ? 'rotate-180' : ''}`}
+                />
               </button>
               {sortOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 glass-card border border-white/10 rounded-xl overflow-hidden z-30 shadow-xl shadow-black/40 animate-fade-in">
+                <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-border rounded-xl overflow-hidden z-30 shadow-card-hover animate-fade-in">
                   {SORT_OPTIONS.map(({ value, label }) => (
                     <button
                       key={value}
@@ -235,8 +232,8 @@ export default function Explore() {
                       className={[
                         'w-full text-left px-4 py-2.5 text-sm transition-colors',
                         sortBy === value
-                          ? 'text-blue-300 bg-brand-blue/10'
-                          : 'text-gray-400 hover:text-white hover:bg-white/5',
+                          ? 'text-ink font-medium bg-surface-muted'
+                          : 'text-ink-secondary hover:text-ink hover:bg-surface-muted',
                       ].join(' ')}
                     >
                       {label}
@@ -249,45 +246,44 @@ export default function Explore() {
             {/* Mobile filters toggle */}
             <button
               onClick={() => setMobileFiltersOpen((v) => !v)}
-              className="flex items-center justify-center gap-2 glass border border-white/10 hover:border-white/20 px-4 py-3 rounded-2xl text-sm text-gray-300 hover:text-white transition-all duration-200 sm:hidden"
+              className="flex items-center justify-center gap-2 bg-white border border-border hover:border-border-strong px-4 py-3 rounded-xl text-sm text-ink-secondary hover:text-ink transition-all duration-150 sm:hidden shadow-card"
             >
               <SlidersHorizontal size={15} />
               Filters
               {hasActiveFilters && (
-                <span className="w-2 h-2 rounded-full bg-brand-blue" />
+                <span className="w-2 h-2 rounded-full bg-accent" />
               )}
             </button>
           </div>
 
-          {/* Mobile filters panel */}
+          {/* Mobile filter panel */}
           {mobileFiltersOpen && (
-            <div className="mt-4 glass-card border border-white/[0.08] rounded-2xl p-5 sm:hidden animate-fade-in">
+            <div className="mt-4 bg-white border border-border rounded-2xl p-5 sm:hidden animate-fade-in shadow-card">
               <FilterPanel />
             </div>
           )}
 
-          {/* Desktop filters (always visible on sm+) */}
-          <div className="hidden sm:block mt-5 glass-card border border-white/[0.06] rounded-2xl p-5">
+          {/* Desktop filter panel */}
+          <div className="hidden sm:block mt-4 bg-white border border-border rounded-2xl p-5 shadow-card">
             <FilterPanel />
           </div>
         </div>
 
-        {/* ── Results meta row ────────────────────────────────────────── */}
-        <div className="flex items-center justify-between mb-5 gap-3 flex-wrap">
-          <p className="text-sm text-gray-500">
-            <span className="text-white font-medium">{results.length}</span>
+        {/* ── Results meta ────────────────────────────────────────────── */}
+        <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
+          <p className="text-sm text-ink-secondary">
+            <span className="text-ink font-semibold">{results.length}</span>
             {' '}event{results.length !== 1 ? 's' : ''} found
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="ml-3 text-xs text-gray-600 hover:text-red-400 underline underline-offset-2 transition-colors"
+                className="ml-3 text-xs text-ink-muted hover:text-red-500 underline underline-offset-2 transition-colors"
               >
                 Clear filters
               </button>
             )}
           </p>
 
-          {/* Active filter pills */}
           <div className="flex flex-wrap gap-2">
             {searchQuery && (
               <FilterPill label={`"${searchQuery}"`} onRemove={() => setSearchQuery('')} />
@@ -307,7 +303,7 @@ export default function Explore() {
           </div>
         </div>
 
-        {/* ── Results grid or empty state ─────────────────────────────── */}
+        {/* ── Grid or empty ───────────────────────────────────────────── */}
         {results.length === 0 ? (
           <EmptyState
             icon={Search}
@@ -325,29 +321,9 @@ export default function Explore() {
 
       </PageContainer>
 
-      {/* Close sort dropdown on outside click */}
       {sortOpen && (
-        <div
-          className="fixed inset-0 z-20"
-          onClick={() => setSortOpen(false)}
-        />
+        <div className="fixed inset-0 z-20" onClick={() => setSortOpen(false)} />
       )}
     </div>
-  )
-}
-
-/* ── Small removable filter pill ─────────────────────────────────────────── */
-function FilterPill({ label, onRemove }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 bg-dark-500 border border-white/10 text-gray-300 text-xs font-medium px-2.5 py-1 rounded-full">
-      {label}
-      <button
-        onClick={onRemove}
-        className="text-gray-500 hover:text-white transition-colors"
-        aria-label={`Remove ${label} filter`}
-      >
-        <X size={10} />
-      </button>
-    </span>
   )
 }

@@ -1,7 +1,5 @@
 /**
- * SectionHeading — consistent section title + optional subtitle
- *
- * Props: title, subtitle, align ('left' | 'center'), className
+ * SectionHeading — light theme section title + optional subtitle
  */
 export default function SectionHeading({
   title,
@@ -13,11 +11,11 @@ export default function SectionHeading({
 
   return (
     <div className={`flex flex-col gap-2 ${alignClass} ${className}`}>
-      <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
+      <h2 className="text-2xl sm:text-3xl font-bold text-ink leading-tight tracking-tight">
         {title}
       </h2>
       {subtitle && (
-        <p className="text-gray-400 text-sm sm:text-base max-w-xl">{subtitle}</p>
+        <p className="text-ink-secondary text-sm sm:text-base max-w-xl leading-relaxed">{subtitle}</p>
       )}
     </div>
   )

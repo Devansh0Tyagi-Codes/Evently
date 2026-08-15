@@ -1,7 +1,5 @@
 /**
- * LoadingState — skeleton / spinner placeholder
- *
- * Props: message, variant ('spinner' | 'skeleton'), count (for skeleton cards)
+ * LoadingState — light theme skeleton / spinner
  */
 export default function LoadingState({
   message = 'Loading…',
@@ -10,17 +8,17 @@ export default function LoadingState({
 }) {
   if (variant === 'skeleton') {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {Array.from({ length: count }).map((_, i) => (
           <div
             key={i}
-            className="glass-card rounded-2xl overflow-hidden animate-pulse"
+            className="bg-white border border-border rounded-2xl overflow-hidden animate-pulse"
           >
-            <div className="h-48 bg-dark-500" />
-            <div className="p-5 space-y-3">
-              <div className="h-4 bg-dark-500 rounded-full w-3/4" />
-              <div className="h-3 bg-dark-500 rounded-full w-1/2" />
-              <div className="h-3 bg-dark-500 rounded-full w-2/3" />
+            <div className="h-44 bg-surface-muted" />
+            <div className="p-4 space-y-3">
+              <div className="h-4 bg-surface-muted rounded-full w-3/4" />
+              <div className="h-3 bg-surface-muted rounded-full w-1/2" />
+              <div className="h-3 bg-surface-muted rounded-full w-2/3" />
             </div>
           </div>
         ))}
@@ -30,8 +28,8 @@ export default function LoadingState({
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-20">
-      <div className="w-10 h-10 rounded-full border-2 border-brand-blue border-t-transparent animate-spin" />
-      <p className="text-gray-400 text-sm">{message}</p>
+      <div className="w-9 h-9 rounded-full border-2 border-ink border-t-transparent animate-spin" />
+      <p className="text-ink-secondary text-sm">{message}</p>
     </div>
   )
 }

@@ -1,22 +1,26 @@
 /**
- * Badge — inline label chip
+ * Badge — light theme inline label chip
  *
- * Props:
- *   variant: 'blue' | 'purple' | 'green' | 'amber' | 'gray'  (default: 'blue')
- *   size:    'sm' | 'md'                                       (default: 'md')
+ * variant: 'default' | 'orange' | 'green' | 'amber' | 'gray' | 'dark'
+ *          (legacy names 'blue'|'purple' map to 'default' for compatibility)
+ * size:    'sm' | 'md'
  */
-export default function Badge({ variant = 'blue', size = 'md', className = '', children }) {
+export default function Badge({ variant = 'default', size = 'md', className = '', children }) {
   const sizes = {
-    sm: 'px-2 py-0.5 text-xs',
+    sm: 'px-2 py-0.5 text-[11px]',
     md: 'px-2.5 py-1 text-xs',
   }
 
+  /* Map legacy dark-theme variant names → light-theme equivalents */
+  const resolved = ({ blue: 'default', purple: 'default', indigo: 'default' })[variant] ?? variant
+
   const variants = {
-    blue: 'bg-brand-blue/15 text-blue-400 border border-brand-blue/30',
-    purple: 'bg-brand-purple/15 text-purple-400 border border-brand-purple/30',
-    green: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
-    amber: 'bg-amber-500/15 text-amber-400 border border-amber-500/30',
-    gray: 'bg-white/5 text-gray-400 border border-white/10',
+    default: 'bg-surface-muted text-ink-secondary border border-border',
+    orange:  'bg-orange-50 text-orange-700 border border-orange-200',
+    green:   'bg-emerald-50 text-emerald-700 border border-emerald-200',
+    amber:   'bg-amber-50 text-amber-700 border border-amber-200',
+    gray:    'bg-surface-muted text-ink-muted border border-border',
+    dark:    'bg-ink text-white border border-ink',
   }
 
   return (
@@ -24,7 +28,7 @@ export default function Badge({ variant = 'blue', size = 'md', className = '', c
       className={[
         'inline-flex items-center gap-1 font-medium rounded-full',
         sizes[size],
-        variants[variant],
+        variants[resolved] ?? variants.default,
         className,
       ]
         .filter(Boolean)

@@ -1,13 +1,8 @@
 import { Calendar, MapPin, Star, ShieldCheck, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import Badge from './Badge'
 
 /**
- * EventCard — premium event summary card.
- *
- * Accepts the full Event shape from src/data/events.js:
- * { id, title, category, image, date, time, location, city,
- *   price, rating, reviewCount, organizer, verified, tags[] }
+ * EventCard — premium light-theme event card.
  */
 export default function EventCard({ event = {} }) {
   const {
@@ -28,83 +23,73 @@ export default function EventCard({ event = {} }) {
   const priceLabel = price === 0 ? 'Free' : `₹${price.toLocaleString('en-IN')}`
   const ratingDisplay = rating > 0 ? rating.toFixed(1) : null
 
-  /* Category → accent colour mapping */
-  const categoryVariant = {
-    Technology: 'blue',
-    Workshops: 'purple',
-    Music: 'amber',
-    Sports: 'green',
-    Business: 'blue',
-    Art: 'amber',
-    Community: 'green',
-  }[category] ?? 'gray'
+  /* Category → light pastel background for placeholder */
+  const placeholderBg = {
+    Technology: 'bg-slate-100',
+    Workshops:  'bg-stone-100',
+    Music:      'bg-amber-50',
+    Sports:     'bg-emerald-50',
+    Business:   'bg-blue-50',
+    Art:        'bg-orange-50',
+    Community:  'bg-teal-50',
+  }[category] ?? 'bg-surface-muted'
 
-  /* Category → gradient for the image placeholder */
-  const placeholderGradient = {
-    Technology: 'from-blue-900/60 to-dark-700',
-    Workshops: 'from-purple-900/60 to-dark-700',
-    Music: 'from-amber-900/60 to-dark-700',
-    Sports: 'from-emerald-900/60 to-dark-700',
-    Business: 'from-blue-900/60 to-dark-700',
-    Art: 'from-orange-900/60 to-dark-700',
-    Community: 'from-teal-900/60 to-dark-700',
-  }[category] ?? 'from-dark-600 to-dark-700'
-
-  /* Category → icon emoji for placeholder */
   const placeholderEmoji = {
     Technology: '💻',
-    Workshops: '🛠️',
-    Music: '🎵',
-    Sports: '🏃',
-    Business: '💼',
-    Art: '🎨',
-    Community: '🤝',
+    Workshops:  '🛠️',
+    Music:      '🎵',
+    Sports:     '🏃',
+    Business:   '💼',
+    Art:        '🎨',
+    Community:  '🤝',
   }[category] ?? '📅'
 
   return (
     <Link
       to={`/events/${id}`}
-      className="group glass-card rounded-2xl overflow-hidden flex flex-col border border-white/[0.06] hover:border-brand-blue/40 hover:shadow-xl hover:shadow-brand-blue/10 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue"
+      className="group bg-white border border-border rounded-2xl overflow-hidden flex flex-col shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ink"
     >
-      {/* ── Image area ─────────────────────────────────────────────────── */}
+      {/* ── Image ─────────────────────────────────────────────────────── */}
       <div className="relative h-44 overflow-hidden shrink-0">
         {image ? (
           <img
             src={image}
             alt={title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-400"
           />
         ) : (
           <div
-            className={`w-full h-full bg-gradient-to-br ${placeholderGradient} flex items-center justify-center group-hover:scale-105 transition-transform duration-500`}
+            className={`w-full h-full ${placeholderBg} flex items-center justify-center group-hover:scale-[1.03] transition-transform duration-400`}
           >
-            <span className="text-5xl opacity-30 select-none">{placeholderEmoji}</span>
+            <span className="text-5xl opacity-40 select-none">{placeholderEmoji}</span>
           </div>
         )}
 
-        {/* Top-left: category */}
+        {/* Category label — top left */}
         <div className="absolute top-3 left-3">
-          <Badge variant={categoryVariant} size="sm">{category}</Badge>
+          <span className="inline-flex items-center bg-white/90 backdrop-blur-sm text-ink text-[11px] font-semibold px-2.5 py-1 rounded-full border border-border shadow-sm">
+            {category}
+          </span>
         </div>
 
-        {/* Top-right: verified */}
+        {/* Verified badge — top right */}
         {verified && (
           <div className="absolute top-3 right-3">
-            <Badge variant="green" size="sm">
+            <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur-sm text-emerald-700 text-[11px] font-semibold px-2.5 py-1 rounded-full border border-emerald-200 shadow-sm">
               <ShieldCheck size={10} />
               Verified
-            </Badge>
+            </span>
           </div>
         )}
 
-        {/* Bottom-right: price pill */}
+        {/* Price — bottom right */}
         <div className="absolute bottom-3 right-3">
           <span
             className={[
-              'text-xs font-bold px-2.5 py-1 rounded-lg border backdrop-blur-sm',
+              'text-[11px] font-bold px-2.5 py-1 rounded-full border shadow-sm',
               price === 0
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-                : 'bg-dark-900/70 text-white border-white/10',
+                ? 'bg-white/90 text-emerald-700 border-emerald-200'
+                : 'bg-white/90 text-ink border-border',
             ].join(' ')}
           >
             {priceLabel}
@@ -112,47 +97,46 @@ export default function EventCard({ event = {} }) {
         </div>
       </div>
 
-      {/* ── Content ────────────────────────────────────────────────────── */}
-      <div className="flex flex-col flex-1 p-4 gap-3">
+      {/* ── Content ───────────────────────────────────────────────────── */}
+      <div className="flex flex-col flex-1 p-4 gap-2.5">
+
         {/* Title */}
-        <h3 className="text-white font-semibold text-[15px] leading-snug group-hover:text-blue-300 transition-colors duration-200 line-clamp-2">
+        <h3 className="text-ink font-semibold text-[15px] leading-snug group-hover:text-ink/70 transition-colors duration-150 line-clamp-2">
           {title}
         </h3>
 
-        {/* Meta — date + location */}
-        <div className="flex flex-col gap-1.5 text-xs text-gray-400">
+        {/* Meta */}
+        <div className="flex flex-col gap-1.5 text-xs text-ink-secondary">
           <div className="flex items-center gap-1.5">
-            <Calendar size={12} className="text-brand-blue shrink-0" />
+            <Calendar size={12} className="text-ink-muted shrink-0" />
             <span>{date}{time ? ` · ${time}` : ''}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <MapPin size={12} className="text-brand-purple shrink-0" />
+            <MapPin size={12} className="text-ink-muted shrink-0" />
             <span className="truncate">{location}</span>
           </div>
         </div>
 
         {/* Organizer */}
         {organizer && (
-          <p className="text-xs text-gray-500 truncate">by {organizer}</p>
+          <p className="text-xs text-ink-muted truncate">by {organizer}</p>
         )}
 
-        {/* ── Footer row ─────────────────────────────────────────────── */}
-        <div className="flex items-center justify-between pt-3 border-t border-white/[0.06] mt-auto">
-          {/* Rating */}
+        {/* ── Footer ──────────────────────────────────────────────────── */}
+        <div className="flex items-center justify-between pt-3 border-t border-border mt-auto">
           {ratingDisplay ? (
             <div className="flex items-center gap-1">
-              <Star size={12} className="text-amber-400 fill-amber-400" />
-              <span className="text-xs font-semibold text-white">{ratingDisplay}</span>
-              <span className="text-xs text-gray-500">({reviewCount})</span>
+              <Star size={11} className="text-amber-500 fill-amber-500" />
+              <span className="text-xs font-semibold text-ink">{ratingDisplay}</span>
+              <span className="text-xs text-ink-muted">({reviewCount})</span>
             </div>
           ) : (
-            <span className="text-xs text-gray-600">No reviews yet</span>
+            <span className="text-xs text-ink-muted">No reviews yet</span>
           )}
 
-          {/* View details CTA */}
-          <span className="flex items-center gap-1 text-xs font-medium text-brand-blue group-hover:gap-1.5 transition-all duration-200">
+          <span className="flex items-center gap-1 text-xs font-medium text-ink-secondary group-hover:text-ink group-hover:gap-1.5 transition-all duration-150">
             View details
-            <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+            <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform duration-150" />
           </span>
         </div>
       </div>
