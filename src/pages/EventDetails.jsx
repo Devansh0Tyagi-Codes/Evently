@@ -7,17 +7,20 @@ import {
   ShieldCheck,
   Clock,
   Tag,
+  Star,
+  Building2,
+  CheckCircle2,
 } from 'lucide-react'
 import PageContainer from '../components/ui/PageContainer'
 import Button from '../components/ui/Button'
 import Badge from '../components/ui/Badge'
-import { PLACEHOLDER_EVENTS } from '../data/placeholderEvents'
+import { EVENTS } from '../data/events'
 
 export default function EventDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
 
-  const event = PLACEHOLDER_EVENTS.find((e) => e.id === id)
+  const event = EVENTS.find((e) => e.id === id)
 
   if (!event) {
     return (
@@ -32,6 +35,34 @@ export default function EventDetails() {
     )
   }
 
+  const {
+    title, category, date, time, location, city, price, rating,
+    reviewCount, organizer, verified, description, highlights = [],
+    attendees, tags = [],
+  } = event
+
+  const priceLabel = price === 0 ? 'Free' : `₹${price.toLocaleString('en-IN')}`
+
+  const categoryVariant = {
+    Technology: 'blue', Workshops: 'purple', Music: 'amber',
+    Sports: 'green', Business: 'blue', Art: 'amber', Community: 'green',
+  }[category] ?? 'gray'
+
+  const placeholderGradient = {
+    Technology: 'from-blue-900/60 to-dark-700',
+    Workshops:  'from-purple-900/60 to-dark-700',
+    Music:      'from-amber-900/60 to-dark-700',
+    Sports:     'from-emerald-900/60 to-dark-700',
+    Business:   'from-blue-900/60 to-dark-700',
+    Art:        'from-orange-900/60 to-dark-700',
+    Community:  'from-teal-900/60 to-dark-700',
+  }[category] ?? 'from-dark-600 to-dark-700'
+
+  const placeholderEmoji = {
+    Technology: '💻', Workshops: '🛠️', Music: '🎵',
+    Sports: '🏃', Business: '💼', Art: '🎨', Community: '🤝',
+  }[category] ?? '📅'
+
   return (
     <div className="py-10 sm:py-16 min-h-screen">
       <PageContainer>
@@ -45,38 +76,47 @@ export default function EventDetails() {
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main content */}
+          {/* ── Main ──────────────────────────────────────────────────── */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Hero image placeholder */}
-            <div className="h-56 sm:h-72 rounded-2xl bg-gradient-to-br from-dark-600 to-dark-700 flex items-center justify-center border border-white/5">
-              <Calendar size={48} className="text-dark-400" />
+
+            {/* Hero image */}
+            <div className={`h-60 sm:h-80 rounded-2xl bg-gradient-to-br ${placeholderGradient} flex items-center justify-center overflow-hidden border border-white/[0.06]`}>
+              <span className="text-8xl opacity-20 select-none">{placeholderEmoji}</span>
             </div>
 
-            {/* Tags */}
+            {/* Tags row */}
             <div className="flex flex-wrap gap-2">
-              <Badge variant="blue">{event.category}</Badge>
-              {event.verified && <Badge variant="green"><ShieldCheck size={11} /> Verified</Badge>}
-              {event.tags.map((t) => <Badge key={t} variant="gray">{t}</Badge>)}
+              <Badge variant={categoryVariant}>{category}</Badge>
+              {verified && (
+                <Badge variant="green">
+                  <ShieldCheck size={11} />
+                  Verified Organizer
+                </Badge>
+              )}
+              {tags.map((t) => (
+                <Badge key={t} variant="gray">{t}</Badge>
+              ))}
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl sm:text-3xl font-bold text-white leading-snug">
-              {event.title}
-            </h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white leading-snug">{title}</h1>
 
-            {/* Meta */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Meta grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
-                { icon: Calendar, label: 'Date & Time', value: event.date },
-                { icon: MapPin, label: 'Location', value: event.location },
-                { icon: Users, label: 'Attending', value: `${event.attendees} people` },
-                { icon: Tag, label: 'Price', value: event.price === 0 ? 'Free' : `$${event.price}` },
+                { icon: Calendar,  label: 'Date',      value: `${date}${time ? ` · ${time}` : ''}` },
+                { icon: MapPin,    label: 'Location',  value: `${location}, ${city}` },
+                { icon: Building2, label: 'Organizer', value: organizer },
+                { icon: Tag,       label: 'Price',     value: priceLabel },
+                ...(attendees !== undefined
+                  ? [{ icon: Users, label: 'Attending', value: `${attendees.toLocaleString('en-IN')} people` }]
+                  : []),
+                ...(rating > 0
+                  ? [{ icon: Star, label: 'Rating', value: `${rating.toFixed(1)} / 5  (${reviewCount} reviews)` }]
+                  : []),
               ].map(({ icon: Icon, label, value }) => (
-                <div
-                  key={label}
-                  className="glass-card rounded-xl p-4 flex items-start gap-3"
-                >
-                  <Icon size={16} className="text-brand-blue mt-0.5 shrink-0" />
+                <div key={label} className="glass-card rounded-xl p-4 flex items-start gap-3">
+                  <Icon size={15} className="text-brand-blue mt-0.5 shrink-0" />
                   <div>
                     <p className="text-xs text-gray-500 mb-0.5">{label}</p>
                     <p className="text-sm text-white font-medium">{value}</p>
@@ -85,59 +125,75 @@ export default function EventDetails() {
               ))}
             </div>
 
-            {/* About placeholder */}
+            {/* Description */}
             <div className="glass-card rounded-2xl p-6 space-y-3">
               <h2 className="text-white font-semibold">About this event</h2>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Full event description will appear here. This section will include
-                details about the event agenda, what attendees will learn or
-                experience, speaker bios, and any prerequisites.
-              </p>
-              <div className="flex items-center gap-2 mt-2">
-                <Clock size={13} className="text-gray-500" />
-                <span className="text-xs text-gray-500">
-                  Event details coming soon
-                </span>
-              </div>
+              <p className="text-gray-400 text-sm leading-relaxed">{description}</p>
+              {highlights.length > 0 && (
+                <ul className="mt-4 space-y-2">
+                  {highlights.map((h) => (
+                    <li key={h} className="flex items-start gap-2 text-sm text-gray-300">
+                      <CheckCircle2 size={15} className="text-brand-blue shrink-0 mt-0.5" />
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
+
+            {/* Trust note */}
+            {verified && (
+              <div className="flex items-start gap-3 bg-emerald-500/5 border border-emerald-500/20 rounded-xl px-4 py-3">
+                <ShieldCheck size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+                <p className="text-xs text-emerald-300 leading-relaxed">
+                  This organizer has been verified by Evently. You can trust the event information and ticket process.
+                </p>
+              </div>
+            )}
           </div>
 
-          {/* Booking sidebar */}
-          <div className="space-y-4">
+          {/* ── Booking sidebar ────────────────────────────────────────── */}
+          <div>
             <div className="glass-card rounded-2xl p-6 sticky top-24 space-y-5">
-              <div className="space-y-1">
-                <p className="text-xs text-gray-500">Starting from</p>
+              <div className="space-y-0.5">
+                <p className="text-xs text-gray-500">Price per person</p>
                 <p className="text-3xl font-extrabold text-white">
-                  {event.price === 0 ? (
+                  {price === 0 ? (
                     <span className="gradient-text">Free</span>
                   ) : (
-                    <span>${event.price}</span>
+                    <>₹{price.toLocaleString('en-IN')}</>
                   )}
                 </p>
               </div>
 
-              <div className="space-y-2 text-sm text-gray-400 border-t border-white/5 pt-4">
+              <div className="space-y-2.5 text-sm text-gray-400 border-t border-white/[0.06] pt-4">
                 <div className="flex justify-between">
                   <span>Availability</span>
                   <span className="text-emerald-400 font-medium">Open</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Organizer</span>
-                  <span className="text-white">Verified Host</span>
+                  <span className="text-white text-right max-w-[160px] truncate">{organizer}</span>
                 </div>
+                {rating > 0 && (
+                  <div className="flex justify-between">
+                    <span>Rating</span>
+                    <span className="text-amber-400 font-medium flex items-center gap-1">
+                      <Star size={12} fill="currentColor" />
+                      {rating.toFixed(1)}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              <Button
-                fullWidth
-                size="lg"
-                onClick={() => navigate('/booking')}
-              >
+              <Button fullWidth size="lg" onClick={() => navigate('/booking')}>
                 Book Now
               </Button>
 
-              <p className="text-xs text-gray-500 text-center">
-                Booking functionality coming soon
-              </p>
+              <div className="flex items-center justify-center gap-1.5 text-xs text-gray-600">
+                <Clock size={11} />
+                Booking details coming soon
+              </div>
             </div>
           </div>
         </div>
