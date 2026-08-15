@@ -3,9 +3,9 @@ import { NavLink, Link } from 'react-router-dom'
 import { Zap, Menu, X, UserCircle, Ticket, Compass, Home } from 'lucide-react'
 
 const navLinks = [
-  { to: '/',           label: 'Home',       icon: Home,    end: true },
-  { to: '/explore',    label: 'Explore',    icon: Compass        },
-  { to: '/my-tickets', label: 'My Tickets', icon: Ticket         },
+  { to: '/',           label: 'Home',       icon: Home,        end: true },
+  { to: '/explore',    label: 'Explore',    icon: Compass            },
+  { to: '/my-tickets', label: 'My Tickets', icon: Ticket             },
 ]
 
 export default function Navbar() {
@@ -62,14 +62,24 @@ export default function Navbar() {
 
           {/* ── Right actions ────────────────────────────────────────── */}
           <div className="flex items-center gap-2">
-            <button
+            {/* Desktop Profile button — now a NavLink */}
+            <NavLink
+              to="/profile"
               aria-label="Profile"
-              className="hidden md:flex items-center gap-1.5 text-sm font-medium text-ink-secondary hover:text-ink border border-border hover:border-border-strong bg-surface hover:bg-surface-muted px-3.5 py-1.5 rounded-lg transition-all duration-150"
+              className={({ isActive }) =>
+                [
+                  'hidden md:flex items-center gap-1.5 text-sm font-medium border px-3.5 py-1.5 rounded-lg transition-all duration-150',
+                  isActive
+                    ? 'text-ink border-border-strong bg-surface-muted'
+                    : 'text-ink-secondary hover:text-ink border-border hover:border-border-strong bg-surface hover:bg-surface-muted',
+                ].join(' ')
+              }
             >
               <UserCircle size={16} />
               Profile
-            </button>
+            </NavLink>
 
+            {/* Mobile hamburger */}
             <button
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               onClick={() => setMobileOpen((v) => !v)}
@@ -99,10 +109,14 @@ export default function Navbar() {
             ))}
 
             <div className="border-t border-border mt-2 pt-3">
-              <button className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium text-ink-secondary hover:text-ink hover:bg-surface-muted transition-colors">
+              <NavLink
+                to="/profile"
+                className={mobileLinkClass}
+                onClick={() => setMobileOpen(false)}
+              >
                 <UserCircle size={16} />
                 Profile
-              </button>
+              </NavLink>
             </div>
           </nav>
         </div>

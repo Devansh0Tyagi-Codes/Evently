@@ -1,5 +1,6 @@
 import { Calendar, MapPin, Star, ShieldCheck, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import ActionButtons from './ActionButtons'
 
 /**
  * EventCard — premium light-theme event card.
@@ -72,15 +73,16 @@ export default function EventCard({ event = {} }) {
           </span>
         </div>
 
-        {/* Verified badge — top right */}
-        {verified && (
-          <div className="absolute top-3 right-3">
+        {/* Verified badge + action buttons — top right */}
+        <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5">
+          {verified && (
             <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur-sm text-emerald-700 text-[11px] font-semibold px-2.5 py-1 rounded-full border border-emerald-200 shadow-sm">
               <ShieldCheck size={10} />
               Verified
             </span>
-          </div>
-        )}
+          )}
+          <ActionButtons eventId={id} />
+        </div>
 
         {/* Price — bottom right */}
         <div className="absolute bottom-3 right-3">
