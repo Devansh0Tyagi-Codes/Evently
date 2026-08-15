@@ -60,7 +60,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col page-enter">
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="bg-surface-subtle border-b border-border">

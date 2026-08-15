@@ -430,7 +430,7 @@ export default function EventDetails() {
 
   /* ── render ────────────────────────────────────────────────────────────── */
   return (
-    <div className="min-h-screen bg-surface-subtle">
+    <div className="min-h-screen bg-surface-subtle page-enter">
 
       {/* Breadcrumb */}
       <div className="border-b border-border bg-white">

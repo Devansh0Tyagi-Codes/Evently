@@ -10,7 +10,8 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth removed — conflicts with programmatic
+       scrollTo({ behavior: 'instant' }) on route change            */
   }
 
   body {
@@ -37,7 +38,6 @@
 }
 
 @layer utilities {
-  /* Replaces old .gradient-text — now just black for headings */
   .accent-text {
     color: #F97316;
   }
@@ -56,16 +56,21 @@
     box-shadow: 0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.04);
   }
 
-  /* Navbar surface (replaces .glass) */
+  /* Navbar surface */
   .glass {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
 
-  /* Gradient text → orange accent for special callouts */
+  /* Gradient text → plain black (legacy compat) */
   .gradient-text {
     color: #111111;
+  }
+
+  /* Page entry animation — apply to every page's root wrapper */
+  .page-enter {
+    animation: pageEnter 0.3s ease-out both;
   }
 
   .no-scrollbar::-webkit-scrollbar {

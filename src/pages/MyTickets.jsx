@@ -191,7 +191,7 @@ export default function MyTickets() {
   const isEmpty = bookings.length === 0
 
   return (
-    <div className="min-h-screen bg-surface-subtle py-10 sm:py-14">
+    <div className="min-h-screen bg-surface-subtle py-10 sm:py-14 page-enter">
       <PageContainer>
 
         {/* Header */}

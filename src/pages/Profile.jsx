@@ -168,7 +168,7 @@ export default function Profile() {
   const initials = MOCK_USER.name.split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase()
 
   return (
-    <div className="min-h-screen bg-surface-subtle">
+    <div className="min-h-screen bg-surface-subtle page-enter">
 
       {/* ── Profile header ───────────────────────────────────────────────── */}
       <div className="bg-white border-b border-border">

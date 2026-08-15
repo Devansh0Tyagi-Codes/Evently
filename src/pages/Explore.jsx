@@ -190,10 +190,8 @@ export default function Explore() {
   )
 
   return (
-    <div className="min-h-screen bg-surface-subtle">
+    <div className="min-h-screen bg-surface-subtle page-enter">
       <PageContainer className="py-10 sm:py-14">
-
-        {/* ── Header ──────────────────────────────────────────────────── */}
         <div className="mb-8">
           <SectionHeading
             title="Explore Events"

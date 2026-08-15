@@ -32,14 +32,18 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        card:    '0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.04)',
+        card:         '0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.04)',
         'card-hover': '0 8px 24px -4px rgba(0,0,0,0.10), 0 2px 8px -2px rgba(0,0,0,0.06)',
-        input:   '0 1px 2px 0 rgba(0,0,0,0.04)',
-        navbar:  '0 1px 0 0 #E5E5E5',
+        input:        '0 1px 2px 0 rgba(0,0,0,0.04)',
+        navbar:       '0 1px 0 0 #E5E5E5',
+      },
+      transitionDuration: {
+        '400': '400ms',
       },
       animation: {
-        'fade-in':  'fadeIn 0.35s ease-in-out',
-        'slide-up': 'slideUp 0.4s ease-out',
+        'fade-in':    'fadeIn 0.3s ease-out both',
+        'slide-up':   'slideUp 0.35s ease-out both',
+        'page-enter': 'pageEnter 0.3s ease-out both',
       },
       keyframes: {
         fadeIn: {
@@ -48,6 +52,10 @@ export default {
         },
         slideUp: {
           '0%':   { opacity: '0', transform: 'translateY(14px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        pageEnter: {
+          '0%':   { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
