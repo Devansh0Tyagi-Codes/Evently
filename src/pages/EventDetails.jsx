@@ -471,9 +471,17 @@ export default function EventDetails() {
 
             {/* Hero */}
             <div
-              className={`relative h-56 sm:h-72 md:h-80 rounded-2xl ${heroBg} border border-border overflow-hidden flex items-center justify-center`}
+              className={`relative h-56 sm:h-72 md:h-80 rounded-2xl overflow-hidden border border-border ${event.image ? '' : heroBg} flex items-center justify-center`}
             >
-              <span className="text-[96px] sm:text-[120px] opacity-[0.15] select-none leading-none">{heroEmoji}</span>
+              {event.image ? (
+                <img
+                  src={event.image}
+                  alt={title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-[96px] sm:text-[120px] opacity-[0.15] select-none leading-none">{heroEmoji}</span>
+              )}
               {verified && (
                 <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-white border border-emerald-200 text-emerald-700 text-[11px] font-semibold px-3 py-1.5 rounded-full shadow-sm">
                   <BadgeCheck size={12} />
